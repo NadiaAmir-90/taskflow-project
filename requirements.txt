@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+langgraph
+openai
+chromadb
+sqlalchemy
+pydantic-settings
+pytest
+httpx

@@ -1,0 +1,22 @@
+[ ] Create a task to learn Python
+[x] Create a high-priority task to finish my project
+[ ] Create a low-priority task to read a book
+
+Read and search
+[ ] Show all tasks
+[ ] List my unfinished tasks
+[x] Find tasks related to JavaScript
+
+Update
+[ ] Mark the task learn Python as done
+[ ] Update the task learn Python to high priority
+[ ] Update the task learn Python to low priority
+
+Clarification and delete
+[ ] Create two tasks named learn JavaScript
+[ ] Update learn JavaScript to low priority
+[ ] Delete the task learn Python and test both confirmation and cancellation
+
+Persistence
+[x] Refresh the browser after an update
+[ ] Restart the server and verify saved tasks

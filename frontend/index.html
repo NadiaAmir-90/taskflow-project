@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TASKFLOW — AI Task Manager</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="/"><span class="brand-mark">✓</span> TASKFLOW</a><div class="top-meta"><span class="live-dot"></span> Your workspace <span class="avatar">TF</span></div></header>
+  <main class="layout">
+    <section class="workspace">
+      <div class="welcome"><div><p class="eyebrow">YOUR PERSONAL WORKSPACE</p><h1>Make space for <span>what matters.</span></h1><p class="subhead">A clear plan for today, powered by your AI assistant.</p></div><button id="new-task" class="primary-button">＋ New task</button></div>
+      <div class="stats"><div class="stat-card"><span class="stat-label">Total tasks</span><strong id="stat-total">0</strong><span class="stat-foot">In your workspace</span></div><div class="stat-card"><span class="stat-label">In progress</span><strong id="stat-progress">0</strong><span class="stat-foot">Moving forward</span></div><div class="stat-card"><span class="stat-label">Completed</span><strong id="stat-done">0</strong><span class="stat-foot">Things you've finished</span></div></div>
+      <div class="board-heading"><div><h2>My tasks</h2><p>Keep your next steps in view.</p></div><div class="filters"><button class="filter active" data-filter="all">All tasks</button><button class="filter" data-filter="todo">To do</button><button class="filter" data-filter="in_progress">In progress</button><button class="filter" data-filter="done">Done</button></div></div>
+      <div id="task-list" class="task-list"><div class="empty-state">Loading your tasks…</div></div>
+      <form id="task-form" class="task-form hidden"><h3 id="form-title">Create a task</h3><label>Title<input id="task-title" required maxlength="200" placeholder="e.g. Finish the product demo"></label><label>Description<textarea id="task-description" rows="2" placeholder="Optional details"></textarea></label><div class="form-row"><label>Priority<select id="task-priority"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option></select></label><label>Status<select id="task-status"><option value="todo">To do</option><option value="in_progress">In progress</option><option value="done">Done</option></select></label><label>Due date<input id="task-due" type="date"></label></div><div class="form-actions"><button type="button" id="cancel-form" class="secondary-button">Cancel</button><button class="primary-button" type="submit">Save task</button></div></form>
+    </section>
+    <aside class="assistant-panel">
+      <div class="assistant-head">
+        <div class="assistant-avatar">✦</div>
+        <div>
+          <h2>Flow AI</h2>
+          <p><span class="live-dot"></span> Ready to help</p></div>
+          <span class="sparkle">✧</span></div>
+          <div class="assistant-intro">
+            <p class="eyebrow">YOUR AI ASSISTANT</p>
+            <h2>Let's get things <span>done.</span></h2>
+            <p>Tell me what you need, and I'll help you organize your tasks.</p></div>
+            <div class="suggestions">
+              <p class="suggestion-label">TRY ASKING</p>
+              <button class="suggestion" data-prompt="Create a high-priority task to finish the demo tomorrow."><span>＋</span> 
+                Create a high-priority task for tomorrow <b>↗</b></button>
+                <button class="suggestion" data-prompt="Show all my tasks."><span>☷</span> Give me an overview of my tasks <b>↗</b></button></div>
+                <div id="chat-messages" class="chat-messages">
+                  <div class="message assistant-message">
+                    <div class="mini-avatar">✦</div>
+                    <div class="bubble">Hi there! I'm Flow, your task assistant. What would you like to work on today?</div></div></div>
+                    <form id="chat-form" class="chat-form"><textarea id="chat-input" rows="1" placeholder="Ask Flow to do something…" aria-label="Message Flow AI"></textarea>
+                      <button type="submit" aria-label="Send message">↑</button></form>
+                      <p class="chat-hint">Enter to send · Shift + Enter for a new line</p>
+                      <div class="assistant-foot"><span>✧ Powered by AI</span><span>Your tasks stay in your workspace</span></div></aside>
+  </main>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="/static/app.js"></script>
+</body>
+</html>
