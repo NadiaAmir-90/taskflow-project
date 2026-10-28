@@ -2,6 +2,21 @@
 const $ = (selector) => document.querySelector(selector);
 
 let tasks = [];
+const MAX_HISTORY = 5;
+
+let chatHistory = [];
+
+try {
+    chatHistory = JSON.parse(
+        localStorage.getItem('taskflowChatHistory') || '[]'
+    );
+
+    if (!Array.isArray(chatHistory)) {
+        chatHistory = [];
+    }
+} catch {
+    chatHistory = [];
+}
 let currentFilter = 'all';
 let editingId = null;
 let pendingAction = null;
@@ -358,6 +373,7 @@ async function sendChat(message) {
             method: 'POST',
             body: JSON.stringify({
                 message,
+                history: chatHistory.slice(-MAX_HISTORY),
                 pending_action: pendingAction,
                 candidate_task_ids: candidateTaskIds,
                 awaiting_clarification: awaitingClarification
@@ -365,7 +381,6 @@ async function sendChat(message) {
         });
 
         // Save the backend state so the next message can continue
-        // the pending operation rather than being parsed as a new command.
         pendingAction = data.pending_action ?? null;
         candidateTaskIds = data.candidate_task_ids ?? [];
         awaitingClarification = data.awaiting_clarification ?? false;
@@ -373,6 +388,20 @@ async function sendChat(message) {
         addMessage(
             data.reply || 'I could not process that request.'
         );
+
+        chatHistory.push(
+            { role: 'user', content: message },
+            { role: 'assistant', content: data.reply || '' }
+        );
+
+        chatHistory = chatHistory.slice(-MAX_HISTORY);
+
+        localStorage.setItem(
+            'taskflowChatHistory',
+            JSON.stringify(chatHistory)
+        );
+
+        
 
         if (data.tasks?.length) {
             for (const item of data.tasks) {
