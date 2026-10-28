@@ -45,9 +45,7 @@ Also included:
 
 ---
 
-## 3. Run the project on another machine
-
-**Requirements:** Python 3.11+ and Git.
+## 3. Run the project 
 
 ### Step 1 — Clone
 ```bash
@@ -114,9 +112,9 @@ Tasks are stored in `data/tasks.db` and the search index in `data/chroma/`. Both
 
 ---
 
-## 6. How each feature is built
+## 4. How each feature is built
 
-### 6.1 Manual CRUD (task board)
+### 4.1 Manual CRUD (task board)
 The frontend calls the REST API directly.
 
 | Operation | Frontend action | API call |
@@ -126,55 +124,55 @@ The frontend calls the REST API directly.
 | Update | **Edit** → Save | `PATCH /api/tasks/{id}` |
 | Delete | **×** → confirm dialog | `DELETE /api/tasks/{id}` |
 
-### 6.2 CRUD from prompts (single operation)
+### 4.2 CRUD from prompts (single operation)
 1. The message goes to `POST /api/chat`.
 2. `parse_intent` returns one action, e.g. `{"action": "update", "task_ref": "API", "changes": {"priority": "low"}}`.
 3. `execute_intent` finds the task with `resolve_task_reference` (exact id → exact title → title contains → all words match) and applies the change through the same `update_task` service the board uses.
 4. The reply and the changed tasks go back to the browser, which refreshes the board.
 
-### 6.3 Multiple operations in one message
+### 4.3 Multiple operations in one message
 - The prompt tells the model to return `{"actions": [ ... ]}` with **one action per instruction, in the order written**.
 - `execute_intent` runs them one after another and joins the results into one reply. A step that fails or is unclear does not stop the others.
 - A later step can depend on an earlier one: *"Create a task to write the report and mark it as in progress"* becomes `create`, then `update`.
 - When a step needs you (a delete confirmation, or choosing between duplicate tasks), the batch **pauses**. The steps that have not run yet are saved inside `pending_action.remaining_intents` and continue after you answer. Saying "no" skips only that step.
 - A limit of 10 actions per message protects against runaway requests.
 
-### 6.4 Conversation memory (last 5 exchanges)
+### 4.4 Conversation memory (last 5 exchanges)
 - The browser keeps the last 10 chat entries (5 of yours and 5 of Flow's) in `chatHistory` and sends them as `history` with each message.
 - The backend puts them in the model's input as a `CONVERSATION SO FAR` block followed by the `LATEST USER MESSAGE`. The prompt tells the model to act only on the latest message and use the history as context only, so earlier actions are never repeated.
 - This is how Flow answers *"what is my name?"* after you said *"hello, I am Nadia"*, and resolves *"mark it as done"*.
 - History is only used as text context. Only `user` and `assistant` roles are accepted, and each entry is length-limited.
 - History lives in the browser, so it starts fresh after a page refresh. Tasks are not affected.
 
-### 6.5 Change priority
+### 4.5 Change priority
 - **Manually:** **Edit** → Priority (Low / Medium / High) → Save → `PATCH /api/tasks/{id}`.
 - **By prompt:** *"Change the priority of the API task to Low"* → `changes: {"priority": "low"}`.
 - If you mention the old and the new priority ("update the medium priority task learn JS into low priority"), the old one is used only to find the task and the **new** one is applied.
 
-### 6.6 Change status and complete tasks
+### 4.6 Change status and complete tasks
 - **Manually:** tick the checkbox to mark done (untick to reopen), or use **Edit** → Status.
 - **By prompt:** *"Move the demo task to In progress"*, *"Mark the weekly report as done"*, *"Complete learn Python"*.
 - Valid statuses: `todo`, `in_progress`, `done`. Phrases such as "to do", "ongoing" and "finished" are understood.
 
-### 6.7 Delete permanently
+### 4.7 Delete permanently
 - **Manually:** click **×** on a task and confirm the dialog. The task is removed from SQLite and from the ChromaDB index.
 - **By prompt:** *"Delete the demo task"*. Flow shows the task and asks you to reply `yes, delete it`. Reply `no` to cancel. Nothing is deleted before you confirm.
 
-### 6.8 Clarification for duplicate names
+### 4.8 Clarification for duplicate names
 If *"learn JavaScript"* matches several tasks, Flow lists them with short IDs and asks you to reply with one (for example `ID 1a2b3c4d`). Replying `cancel` skips that step.
 
-### 6.9 Search
+### 4.9 Search
 - Tasks are embedded and stored in ChromaDB whenever they are created or changed, and removed when deleted.
 - With an embedding key (`OPENAI_API_KEY`), search works by meaning. Without one, a built-in word-matching fallback is used, so the query should share words with the task.
 - "Unfinished", "incomplete" and "pending" mean every task that is not done (To do **and** In progress).
 
-### 6.10 Validation and error handling
+### 4.10 Validation and error handling
 - Title: 1–200 characters, whitespace trimmed. Description: up to 5000. Priority and status are fixed lists. Due date must be a real date (`YYYY-MM-DD`). Chat messages: 1–4000 characters.
 - Invalid input returns a clear message instead of crashing: `422` for bad input, `404` for an unknown task.
 
 ---
 
-## 7. API reference
+## 5. API reference
 
 Base URL: `http://127.0.0.1:8000`. Full interactive docs: `/docs`.
 
@@ -267,7 +265,7 @@ When `pending_action` is not `null`, the agent is waiting for you (delete confir
 
 
 
-## 9. Testing
+## 6. Testing
 
 ```bash
 pytest -q
@@ -277,7 +275,7 @@ The tests cover the health check, create / list / update / delete, validation of
 
 ---
 
-## 10. Troubleshooting
+## 7. Troubleshooting
 
 | Problem | Fix |
 |---|---|
