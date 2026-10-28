@@ -5,6 +5,7 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 TaskStatus = Literal["todo", "in_progress", "done"]
 TaskPriority = Literal["low", "medium", "high"]
 
+
 class TaskCreate(BaseModel):
     title: str = Field(min_length=1, max_length=200)
     description: str = Field(default="", max_length=5000)
@@ -24,6 +25,7 @@ class TaskCreate(BaseModel):
     @classmethod
     def clean_description(cls, value: str) -> str:
         return value.strip()
+
 
 class TaskUpdate(BaseModel):
     title: str | None = Field(default=None, min_length=1, max_length=200)
@@ -47,6 +49,7 @@ class TaskUpdate(BaseModel):
     def clean_description(cls, value: str | None) -> str | None:
         return value.strip() if value is not None else None
 
+
 class TaskRead(BaseModel):
     id: str
     title: str
@@ -58,12 +61,15 @@ class TaskRead(BaseModel):
     updated_at: str
     model_config = ConfigDict(from_attributes=True)
 
+
 class ChatRequest(BaseModel):
     message: str = Field(min_length=1, max_length=4000)
     confirm: bool = False
     pending_action: dict | None = None
     candidate_task_ids: list[str] = Field(default_factory=list)
     awaiting_clarification: bool = False
+
+    history: list[dict] = Field(default_factory=list)
 
     @field_validator("message")
     @classmethod

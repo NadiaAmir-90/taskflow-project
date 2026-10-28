@@ -9,11 +9,16 @@ from app.agent.state import AgentState
 
 
 def route_after_start(state: AgentState) -> str:
-    """Route selection replies before normal intent parsing."""
+    """Route follow-up replies before normal intent parsing."""
     pending = state.get("pending_action")
 
+    # The user is choosing between several matching tasks.
     if pending and state.get("awaiting_clarification", False):
         return "handle_pending_selection"
+
+    # The user is answering a delete confirmation ("yes, delete it" / "no").
+    if pending and pending.get("action") == "delete":
+        return "execute_intent"
 
     return "parse_intent"
 
@@ -29,6 +34,7 @@ builder.add_conditional_edges(
     route_after_start,
     {
         "handle_pending_selection": "handle_pending_selection",
+        "execute_intent": "execute_intent",
         "parse_intent": "parse_intent",
     },
 )
@@ -47,6 +53,7 @@ def run_agent(
     pending_action: dict | None = None,
     awaiting_clarification: bool = False,
     candidate_task_ids: list[str] | None = None,
+    history: list[dict] | None = None,
 ) -> dict:
     result = agent_graph.invoke(
         {
@@ -56,6 +63,7 @@ def run_agent(
             "pending_action": pending_action,
             "awaiting_clarification": awaiting_clarification,
             "candidate_task_ids": candidate_task_ids or [],
+            "history": history or [],
         }
     )
 
@@ -63,9 +71,7 @@ def run_agent(
         "reply": result.get("reply", "Done."),
         "tasks": result.get("tasks", []),
         "pending_action": result.get("pending_action"),
-        "awaiting_clarification": result.get(
-            "awaiting_clarification", False
-        ),
+        "awaiting_clarification": result.get("awaiting_clarification", False),
         "candidate_task_ids": result.get("candidate_task_ids", []),
         "selected_task_id": result.get("selected_task_id"),
     }

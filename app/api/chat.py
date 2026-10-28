@@ -50,12 +50,9 @@ def chat(
         db=db,
         confirm=is_confirm,
         pending_action=pending_action,
-        awaiting_clarification=getattr(
-            payload, "awaiting_clarification", False
-        ),
-        candidate_task_ids=getattr(
-            payload, "candidate_task_ids", []
-        ),
+        awaiting_clarification=getattr(payload, "awaiting_clarification", False),
+        candidate_task_ids=getattr(payload, "candidate_task_ids", []),
+        history=payload.history,
     )
 
     return ChatResponse(**result)
