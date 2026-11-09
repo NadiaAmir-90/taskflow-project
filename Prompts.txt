@@ -1,0 +1,33 @@
+1.this is my existing prompt but i want to improve it .
+my project is Objective
+Build a single-page task manager controlled primarily through an AI chat interface.
+Users should type instructions; the agent should understand and execute task operations.
+Core requirements
+•Chat input and conversation area must be clearly visible on the same page as task listings.
+•Create, list, edit, move, change status, complete, and delete tasks from chat commands.
+•Include task title, description (optional), status, priority, and due date (optional).
+•Semantic task search using ChromaDB or Qdrant; find tasks with natural language.
+•Persist tasks; changes must remain after refresh or application restart.
+•Use structured agent actions, input validation, and clear success/error responses.
+•Ask for clarification before changing or deleting an ambiguous task.
+Required technology
+•Vector store: ChromaDB OR Qdrant (mandatory, for task embeddings and retrieval).
+•AI: any LLM provider or local model; explain your choice and how actions are executed.
+•Frontend/backend: your choice. A usable, responsive single-page UI is mandatory.
+•Use deterministic task IDs and maintain a reliable source of truth for task state.
+Example user instructions
+•“Create a high-priority task to finish the demo tomorrow.”
+•“Show all unfinished tasks related to documentation.”
+•“Move the demo task to In progress and mark the weekly report Done.”
+•“Change the priority of the API task to Low.”
+Submission and evaluation
+•Submit a repository link, README/setup steps, and a short demo video or live demo.
+•Include 3-5 meaningful prompts, failures encountered, and how you corrected them.
+•Evaluation: prompt quality 25, working features 25, retrieval accuracy 20,
+•validation/debugging 20, technical explanation 10. Total: 100 points.
+i will tell you what corner case should you added . but first you undersatnd  my project conceptually ,. after the understand my project properly you will notify me then i will telll you what should ne change
+
+2.
+ now give me the well structured prompts.py files where corner case is some general conversation should show in the chats and also if a user ask for  a multiple action my agents should do the all work consecutively
+
+3.if i have mutiliple task with same title then my agents ask me which one is delete or update through task ID  . so to implement this features where to change ?
